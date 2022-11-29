@@ -115,7 +115,6 @@ func (s3fetcher *S3Fetcher) FetchShardOrRetry(
 	var totalAttempts = 0
 	var shard = types.IndexerShard{}
 	for totalAttempts < MaxRetryCount {
-		fmt.Printf("Try to get shard for shard id = %d on block_height = %d with %d attempts\n", shardId, blockHeight, totalAttempts)
 		shardViewResponse, err := s3Client.GetObject(&s3.GetObjectInput{
 			Bucket:       aws.String(s3BucketName),
 			Key:          aws.String(fmt.Sprintf("%012d/shard_%d.json", blockHeight, shardId)),
