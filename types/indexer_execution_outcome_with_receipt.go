@@ -1,6 +1,6 @@
 package types
 
 type IndexerExecutionOutcomeWithReceipt struct {
-	Transaction SignedTransactionView                      `json:"transaction"`
-	Outcome     IndexerExecutionOutcomeWithOptionalReceipt `json:"outcome"`
+	ExecutionOutcome ExecutionOutcomeWithIdView `json:"execution_outcome"`
+	Receipt          ReceiptView                `json:"receipt"`
 }
