@@ -1,18 +1,22 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/base64"
+	"encoding/json"
+)
 
 type ActionView map[string]interface{}
+type ActionArgs string
 
 type DeployContract struct {
 	Code string `json:"code"`
 }
 
 type FunctionCall struct {
-	MethodName string  `json:"method_name"`
-	Args       string  `json:"args"`
-	Gas        *BigInt `json:"gas"`
-	Deposit    *BigInt `json:"deposit"`
+	MethodName string     `json:"method_name"`
+	Args       ActionArgs `json:"args"`
+	Gas        *BigInt    `json:"gas"`
+	Deposit    *BigInt    `json:"deposit"`
 }
 
 type Transfer struct {
@@ -55,4 +59,25 @@ func (actionView *ActionView) GetFunctionCall() *FunctionCall {
 		return &fc
 	}
 	return nil
+}
+
+func (args *ActionArgs) Decode() (string, error) {
+	decodedData, err := base64.StdEncoding.DecodeString(string(*args))
+	if err != nil {
+		return "{}", err
+	}
+	return string(decodedData), nil
+}
+
+func ConvertActionView(i interface{}) *ActionView {
+	data, err := json.Marshal(i)
+	if err != nil {
+		return nil
+	}
+	action := ActionView{}
+	err = json.Unmarshal(data, &action)
+	if err != nil {
+		return nil
+	}
+	return &action
 }
